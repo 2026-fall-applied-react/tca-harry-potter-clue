@@ -1,19 +1,41 @@
-import { useState } from "react";
 import "./App.css";
+import {
+  HashRouter,
+  Routes,
+  Route
+} from 'react-router'
 
-function App() {
-  const [count, setCount] = useState(0);
+
+const Home = () => <h1>Home</h1>
+const Setup = () => <h1>Setup</h1>
+const Play = () => <h1>Play</h1>
+
+const App = () =>  {
 
   return (
-    <div>
-      <h1 className="text-xl font-bold">Harry Potter Clue</h1>
-      <button
-        type="button"
-        className="btn btn-lg btn-primary"
-        onClick={() => setCount((count) => count + 1)}
-      >
-        Count is {count}
-      </button>
+    <div className="p-3">
+     <HashRouter>
+      <Routes>
+        <Route
+          path='/'
+          element={
+            <Home />
+          }
+        />
+        <Route
+          path='/setup'
+          element={
+            <Setup />
+          }
+        />
+        <Route
+          path='/play'
+          element={
+            <Play />
+          }
+        />
+      </Routes>
+     </HashRouter>
     </div>
   );
 }
