@@ -5,7 +5,8 @@ function App() {
   const [count, setCount] = useState(0);
 
   return (
-    <div className="p-3">
+    <div className="p-3"
+    data-theme="dark">
       <h1 className="text-xl font-bold">Harry Potter Clue</h1>
       <button
         type="button"
