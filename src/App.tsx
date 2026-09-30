@@ -7,9 +7,10 @@ import {
 import { Home } from './Home.tsx';
 import { Setup } from './Setup.tsx';
 import { Play } from './Play.tsx';
-import type { GameResult } from "./GameResults.ts";
+import { getLeaderboard, type GameResult } from "./GameResults.ts";
+import { useState } from "react";
 
-const GameResults: GameResult[] = [
+const dummyGameResults: GameResult[] = [
     {
         winner: "Leona",
         players: [
@@ -74,6 +75,21 @@ const GameResults: GameResult[] = [
 
 const App = () =>  {
 
+  //
+  // react hooks, e.g. useState, useEffect, use*
+  //
+
+  // const [gameResults, setGameResults] = useState<GameResult[]>([]);
+  const [gameResults, setGameResults] = useState<GameResult[]>(dummyGameResults);
+
+  //
+  // derived or calculated state and helper functions
+  //
+
+  //
+  // returns jsx
+  //
+
   return (
     <div className="p-3">
      <HashRouter>
@@ -81,7 +97,11 @@ const App = () =>  {
         <Route
           path='/'
           element={
-            <Home />
+            <Home 
+              leaderboard={
+                getLeaderboard(gameResults)
+              }
+            />
           }
         />
         <Route
