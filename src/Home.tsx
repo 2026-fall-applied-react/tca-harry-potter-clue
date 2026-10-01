@@ -1,16 +1,24 @@
 import { useNavigate } from "react-router";
 import type { LeaderboardEntry } from "./GameResults";
+import { useEffect } from "react";
+
+export const APP_TITLE = "Harry Potter Clue Companion"
 
 type HomeProps = {
   leaderboard: LeaderboardEntry[];
+  setTitle: (t: string) => void;
 };
 
-export const Home: React.FC<HomeProps> = ({ leaderboard: lb }) => {
+export const Home: React.FC<HomeProps> = ({ leaderboard: lb, setTitle }) => {
   const nav = useNavigate();
 
   //
   // react hooks
   //
+
+    useEffect(
+        () => setTitle(APP_TITLE)
+    );
 
   //
   // calculated or derived state...
@@ -22,8 +30,7 @@ export const Home: React.FC<HomeProps> = ({ leaderboard: lb }) => {
 
   return (
     <div>
-      <h1>Home</h1>
-      <button className="btn btn-soft btn-lg" onClick={() => nav("/setup")}>
+      <button className="btn btn-soft btn-lg w-full lg:w-64" onClick={() => nav("/setup")}>
         Set up a Game
       </button>
       <div className="card w-full bg-base-100 card-md shadow-lg my-5">
