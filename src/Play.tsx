@@ -1,5 +1,13 @@
 import { useNavigate } from "react-router";
-export const Play = () => {
+import type { GameResult } from "./GameResults";
+
+type PlayProps = {
+    addNewGameResult: (r: GameResult) => void;
+}
+
+export const Play: React.FC<PlayProps> = ({
+    addNewGameResult,
+}) => {
 
     const nav = useNavigate();
 
@@ -9,7 +17,18 @@ export const Play = () => {
             <button 
             className="btn btn-soft btn-lg"
                         onClick={
-                () => nav(-2)
+                () => {
+                    addNewGameResult({
+                        winner: "Arlo",
+                        players: [
+                            { player: "Arlo", character: "Hermione Granger", curses: 0 },
+                            { player: "Zac", character: "Harry Potter", curses: 0 },
+                            { player: "Leona", character: "Neville Longbottom", curses: 0 },
+                            { player: "Annali", character: "Ron Weasley", curses: 0 },
+                        ]
+                    });
+                    nav(-2);
+                }
             }
             >
                 Game Over
