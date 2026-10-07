@@ -35,35 +35,47 @@ export const Home: React.FC<HomeProps> = ({ leaderboard: lb, setTitle }) => {
       </button>
       <div className="card w-full bg-base-100 card-md shadow-lg my-5">
         <div className="card-body p-0">
-          <h2 className="card-title ml-3 mt-3">Leaderboard</h2>
-          <div className="overflow-x-auto">
-            <table className="table table-zebra">
-              <thead>
-                <tr>
-                  <th>Wins</th>
-                  <th>Losses</th>
-                  <th>Avg</th>
-                  <th>Player</th>
-                </tr>
-              </thead>
-              <tbody>
-                {
-                    lb.map(
-                        x => (
-                            <tr
-                                key={x.player}
-                            >
-                            <td>{x.wins}</td>
-                            <td>{x.losses}</td>
-                            <td>{x.avg.toFixed(3)}</td>
-                            <td>{x.player}</td>
-                            </tr>
-                        )
-                    )
-                }
-              </tbody>
-            </table>
-          </div>
+          <h2 className="card-title ml-3 mt-3">
+            Leaderboard
+          </h2>
+          {
+            lb.length === 0
+              ? (
+                  <p className="ml-3 mb-5">
+                    Setup & play a game to see the leaderboard...
+                  </p>
+              )
+              : (
+                  <div className="overflow-x-auto">
+                    <table className="table table-zebra">
+                      <thead>
+                        <tr>
+                          <th>Wins</th>
+                          <th>Losses</th>
+                          <th>Avg</th>
+                          <th>Player</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {
+                            lb.map(
+                                x => (
+                                    <tr
+                                        key={x.player}
+                                    >
+                                    <td>{x.wins}</td>
+                                    <td>{x.losses}</td>
+                                    <td>{x.avg.toFixed(3)}</td>
+                                    <td>{x.player}</td>
+                                    </tr>
+                                )
+                            )
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+              )
+          }
         </div>
       </div>
     </div>
