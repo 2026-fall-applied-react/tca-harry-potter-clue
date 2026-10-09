@@ -1,6 +1,76 @@
+import { durationFormatter } from "human-readable";
+
 //
 // type definitions/type aliases
 //
+
+// duration formatters
+const formatGameDuration = durationFormatter<string>();
+
+const formatLastPlayed = durationFormatter<string>(
+    {
+        allowMultiples: [
+            "y",
+            "mo",
+            "d"
+        ]
+    }
+);
+
+export type GeneralFacts = {
+    lastPlayed: string;
+    totalGames: number;
+    shortestGame: string;
+    longestGame: string;
+};
+
+export const getGeneralFacts = (
+    games: GameResult[],
+): GeneralFacts => {
+
+    // bail early if no game results
+    if (
+        games.length === 0
+    ) {
+            return (
+        {
+            lastPlayed: "N/A",
+            totalGames: 0,
+            shortestGame: "N/A",
+            longestGame: "N/A"
+        }
+        );
+    }
+
+    const nowForCalcs = Date.now();
+
+    const gamesLastPlayedInMS = games.map(
+        x => nowForCalcs - Date.parse(x.end)
+    );
+
+    const mostRecentGameInMs = Math.min(
+        ...gamesLastPlayedInMS
+    );
+
+    const gameDurationsInMS = games.map(
+        x => Date.parse(x.end) - Date.parse(x.start)
+    );
+
+        return (
+        {
+            lastPlayed: `${(formatLastPlayed(mostRecentGameInMs))} days ago`,
+            totalGames: games.length,
+            shortestGame: formatGameDuration(
+                Math.min(
+                ...gameDurationsInMS)
+            ),
+            longestGame: formatGameDuration(
+                Math.max(
+                ...gameDurationsInMS)
+            ),
+        }
+        );
+};
 
 // Allowable Harry Potter Characters
 export type Character =
@@ -24,6 +94,8 @@ export type GamePlayer = {
 export type GameResult = {
     winner: string;
     players: GamePlayer[];
+    start: string;
+    end: string;
 };
 
 // Each listing on the leaderboard
@@ -61,6 +133,31 @@ export const getLeaderboard = (
     )
 ;
 
+// get unique players who have been part of any game and sort them alphabetically
+export const getPreviousPlayers = (
+    games: GameResult[],
+): string[] => games
+   // just the players as a string array
+   .flatMap(
+        x => x.players
+   )
+   // extract the player property
+   .map(
+        x => x.player,
+   )
+   // unique players
+   .filter(
+        (x, i, a) => i === a.findIndex(
+            y => y === x
+        )
+   )
+   // sorted alphabetically
+   .sort(
+    (a, b) => a.localeCompare(b)
+   )
+
+;
+
 //
 // helper functions
 //
@@ -90,28 +187,3 @@ const getLeaderboardEntry = (
         player: player
     };
 };
-
-// get unique players who have been part of any game and sort them alphabetically
-const getPreviousPlayers = (
-    games: GameResult[],
-): string[] => games
-   // just the players as a string array
-   .flatMap(
-        x => x.players
-   )
-   // extract the player property
-   .map(
-        x => x.player,
-   )
-   // unique players
-   .filter(
-        (x, i, a) => i == a.findIndex(
-            y => y === x
-        )
-   )
-   // sorted alphabetically
-   .sort(
-    (a, b) => a.localeCompare(b)
-   )
-
-;

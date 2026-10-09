@@ -3,7 +3,7 @@ import { HashRouter, Routes, Route } from "react-router";
 import { APP_TITLE, Home } from "./Home.tsx";
 import { Setup } from "./Setup.tsx";
 import { Play } from "./Play.tsx";
-import { getLeaderboard, type GameResult } from "./GameResults.ts";
+import { getGeneralFacts, getLeaderboard, getPreviousPlayers, type GameResult } from "./GameResults.ts";
 import { useState } from "react";
 
 const dummyGameResults: GameResult[] = [
@@ -26,6 +26,8 @@ const dummyGameResults: GameResult[] = [
         curses: 4,
       },
     ],
+        start: "2026-10-03T22:57:36.195Z",
+        end: "2026-10-03T23:07:36.195Z",
   },
   {
     winner: "Zac",
@@ -46,6 +48,8 @@ const dummyGameResults: GameResult[] = [
         curses: 1,
       },
     ],
+      start: "2026-10-03T22:57:36.195Z",
+      end: "2026-10-03T23:07:36.195Z",
   },
   {
     winner: "Leona",
@@ -66,6 +70,8 @@ const dummyGameResults: GameResult[] = [
         curses: 1,
       },
     ],
+      start: "2026-10-03T22:57:36.195Z",
+      end: "2026-10-03T23:07:36.195Z",
   },
 ];
 
@@ -87,6 +93,8 @@ const App = () => {
 
   const [title, setTitle] = useState(APP_TITLE);
 
+  const [currentPlayers, setCurrentPlayers] = useState<string[]>([]);
+
   //
   // returns jsx
   //
@@ -101,19 +109,33 @@ const App = () => {
           <Routes>
             <Route
               path="/"
-              element={<Home 
+              element={
+              <Home 
                 leaderboard={getLeaderboard(gameResults)
                 }
                 setTitle={
                   setTitle
                 }
-              />}
+                generalFacts={
+                  getGeneralFacts(gameResults)
+                }
+                
+              />
+            }
             />
-            <Route path="/setup" element={<Setup
+            <Route path="/setup" element={
+              <Setup
                 setTitle={
                   setTitle
                 }
-            />} />
+                previousPlayers={
+                  getPreviousPlayers(gameResults)
+                }
+                setCurrentPlayers={
+                  setCurrentPlayers
+                }
+            />
+            } />
             <Route
               path="/play"
               element={<Play 
@@ -122,6 +144,9 @@ const App = () => {
                 }
                 setTitle={
                   setTitle
+                }
+                currentPlayers={
+                  currentPlayers
                 }
                 />}
             />

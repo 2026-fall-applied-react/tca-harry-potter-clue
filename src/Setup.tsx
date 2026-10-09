@@ -1,35 +1,91 @@
 import { useNavigate } from "react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export const APP_TITLE = "Setup Game"
 
 type SetupProps = {
     setTitle: (t: string) => void;
+    previousPlayers: string[];
+    setCurrentPlayers: (players: string[]) => void;
 }
 
 
-export const Setup: React.FC<SetupProps> = ({setTitle}) => {
+export const Setup: React.FC<SetupProps> = ({
+    setTitle,
+    previousPlayers,
+    setCurrentPlayers
+
+}) => {
+
+    const [availablePlayers, setAvailablePlayers] = useState(
+        previousPlayers.map(
+            x => ({
+                name: x,
+                checked: false,
+            }
+        )
+      )
+    );
 
     const nav = useNavigate();
 
-      //
-      // react hooks
-      //
-    
-    useEffect(
-            () => setTitle(APP_TITLE)
-    );
+    //
+    // react hooks
+    //
+
+    useEffect(() => setTitle(APP_TITLE), [setTitle]);
 
     return (
         <div>
-            <button 
-            className="btn btn-soft btn-lg"
-                        onClick={
-                () => nav('/play')
-            }
+            <button
+                className="btn btn-soft btn-lg mt-3 w-full lg:w-64"
+                onClick={
+                    () => {
+                        setCurrentPlayers(
+                            availablePlayers.filter(
+                                x => x.checked
+                            ).map(
+                                x => x.name
+                            )
+                        );
+                        nav('/play')}}
             >
                 Play The Game
             </button>
+            {
+                availablePlayers.map(
+                    x => (
+                        <p 
+                            key={x.name}
+                            className="my-3"
+                        >
+                        <label 
+                            className="text-lg my-5"
+                        >
+                            <input 
+                                type="checkbox" 
+                                className="checkbox checkbox-lg" 
+                                checked={
+                                    x.checked
+                                }
+                            onChange={
+                                (e) => setAvailablePlayers(
+                                    players => players.map(
+                                        player => player.name === x.name
+                                        ? {
+                                            ...player,
+                                            checked: e.target.checked,
+                                        }
+                                        : player
+                                    )
+                                )
+                            }
+                            />
+                            {x.name}
+                        </label>
+                    </p>
+                ))
+            }
         </div>
     );
 };
