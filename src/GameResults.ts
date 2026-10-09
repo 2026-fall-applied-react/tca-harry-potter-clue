@@ -17,6 +17,8 @@ const formatLastPlayed = durationFormatter<string>(
     }
 );
 
+// Types and fallback for general facts like last game played, total number of games
+// Longest and shortest game
 export type GeneralFacts = {
     lastPlayed: string;
     totalGames: number;
@@ -42,6 +44,7 @@ export const getGeneralFacts = (
         );
     }
 
+    // Calculations for General facts relating to game duration and recent game
     const nowForCalcs = Date.now();
 
     const gamesLastPlayedInMS = games.map(
@@ -84,11 +87,17 @@ export type Character =
 
 // Each player instance - including what character they choose to start
 // And, what number of curses they have at the end of the game
-export type GamePlayer = {
+export type GamePlayerSelection = {
     player: string;
     character: Character;
-    curses: number;
-}
+};
+
+export type GamePlayer = GamePlayerSelection 
+// Separating out Game Player for recording things like curses at Play
+// But things like character at the point of setup/game player selection
+// & {
+//    curses: number;
+//};
 
 // Results from the game
 export type GameResult = {

@@ -3,7 +3,7 @@ import { HashRouter, Routes, Route } from "react-router";
 import { APP_TITLE, Home } from "./Home.tsx";
 import { Setup } from "./Setup.tsx";
 import { Play } from "./Play.tsx";
-import { getGeneralFacts, getLeaderboard, getPreviousPlayers, type GameResult } from "./GameResults.ts";
+import { getGeneralFacts, getLeaderboard, getPreviousPlayers, type GamePlayerSelection, type GameResult } from "./GameResults.ts";
 import { useState } from "react";
 
 const dummyGameResults: GameResult[] = [
@@ -13,17 +13,14 @@ const dummyGameResults: GameResult[] = [
       {
         player: "Leona",
         character: "Harry Potter",
-        curses: 2,
       },
       {
         player: "Zac",
         character: "Ron Weasley",
-        curses: 1,
       },
       {
         player: "Annali",
         character: "Luna Lovegood",
-        curses: 4,
       },
     ],
         start: "2026-10-03T22:57:36.195Z",
@@ -35,17 +32,14 @@ const dummyGameResults: GameResult[] = [
       {
         player: "Leona",
         character: "Harry Potter",
-        curses: 2,
       },
       {
         player: "Zac",
         character: "Hermione Granger",
-        curses: 1,
       },
       {
         player: "Annali",
         character: "Luna Lovegood",
-        curses: 1,
       },
     ],
       start: "2026-10-03T22:57:36.195Z",
@@ -57,17 +51,14 @@ const dummyGameResults: GameResult[] = [
       {
         player: "Leona",
         character: "Harry Potter",
-        curses: 0,
       },
       {
         player: "Zac",
         character: "Neville Longbottom",
-        curses: 1,
       },
       {
         player: "Annali",
         character: "Luna Lovegood",
-        curses: 1,
       },
     ],
       start: "2026-10-03T22:57:36.195Z",
@@ -93,7 +84,7 @@ const App = () => {
 
   const [title, setTitle] = useState(APP_TITLE);
 
-  const [currentPlayers, setCurrentPlayers] = useState<string[]>([]);
+  const [currentPlayers, setCurrentPlayers] = useState<GamePlayerSelection[]>([]);
 
   //
   // returns jsx

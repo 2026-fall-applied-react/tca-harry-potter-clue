@@ -1,12 +1,29 @@
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
+import type { Character, GamePlayerSelection } from "./GameResults";
+
 
 export const APP_TITLE = "Setup Game"
+
+const characters: Character[] = [
+    "Harry Potter",
+    "Ron Weasley",
+    "Hermione Granger",
+    "Ginny Weasley",
+    "Luna Lovegood",
+    "Neville Longbottom",
+];
+
+type AvailablePlayer = {
+    name: string;
+    checked: boolean;
+    character: Character | "";
+};
 
 type SetupProps = {
     setTitle: (t: string) => void;
     previousPlayers: string[];
-    setCurrentPlayers: (players: string[]) => void;
+    setCurrentPlayers: (players: GamePlayerSelection[]) => void;
 }
 
 
@@ -17,14 +34,12 @@ export const Setup: React.FC<SetupProps> = ({
 
 }) => {
 
-    const [availablePlayers, setAvailablePlayers] = useState(
-        previousPlayers.map(
-            x => ({
-                name: x,
-                checked: false,
-            }
-        )
-      )
+    const [availablePlayers, setAvailablePlayers] = useState<AvailablePlayer[]>(
+        previousPlayers.map(name => ({
+            name,
+            checked: false,
+            character: "",
+        }))
     );
 
     const nav = useNavigate();
@@ -42,10 +57,13 @@ export const Setup: React.FC<SetupProps> = ({
                 onClick={
                     () => {
                         setCurrentPlayers(
-                            availablePlayers.filter(
-                                x => x.checked
-                            ).map(
-                                x => x.name
+                            availablePlayers.flatMap(player =>
+                                player.checked && player.character !== ""
+                                    ? [{
+                                        player: player.name,
+                                        character: player.character,
+                                    }]
+                                    : []
                             )
                         );
                         nav('/play')}}
@@ -64,7 +82,7 @@ export const Setup: React.FC<SetupProps> = ({
                         >
                             <input 
                                 type="checkbox" 
-                                className="checkbox checkbox-lg" 
+                                className="checkbox checkbox-lg mr-3" 
                                 checked={
                                     x.checked
                                 }
@@ -83,6 +101,29 @@ export const Setup: React.FC<SetupProps> = ({
                             />
                             {x.name}
                         </label>
+                        <select
+                            className="select ml-3"
+                            value={x.character}
+                            onChange={e => {
+                                const character = characters.find(
+                                    option => option === e.target.value
+                                ) ?? "";
+                                setAvailablePlayers(players =>
+                                    players.map(player =>
+                                        player.name === x.name
+                                            ? { ...player, character }
+                                            : player
+                                    )
+                                );
+                            }}
+                        >
+                            <option value="">Choose a character</option>
+                            {characters.map(character => (
+                                <option key={character} value={character}>
+                                    {character}
+                                </option>
+                            ))}
+                        </select>
                     </p>
                 ))
             }

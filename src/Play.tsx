@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import type { GameResult } from "./GameResults";
+import type { GamePlayerSelection, GameResult } from "./GameResults";
 import { useEffect, useState } from "react";
 
 export const APP_TITLE = "Play"
@@ -7,7 +7,7 @@ export const APP_TITLE = "Play"
 type PlayProps = {
     addNewGameResult: (r: GameResult) => void;
     setTitle: (t: string) => void;
-    currentPlayers: string[];
+    currentPlayers: GamePlayerSelection[];
 }
 
 export const Play: React.FC<PlayProps> = ({
@@ -44,25 +44,21 @@ export const Play: React.FC<PlayProps> = ({
                 currentPlayers.map(
                     x => (
                     <button 
-                    className="btn btn-soft btn-lg mt-3 w-full lg:w-64"
+                    key={x.player}
+                    className="btn btn-soft btn-lg mt-3 w-full lg:w-64 m-3"
                                 onClick={
                         () => {
                             addNewGameResult({
-                                winner: "x",
+                                players: currentPlayers,
+                                winner: x.player,
                                 start: startTimestamp,
                                 end: new Date().toISOString(),
-                                players: [
-                                    { player: "Arlo", character: "Hermione Granger", curses: 0 },
-                                    { player: "Zac", character: "Harry Potter", curses: 0 },
-                                    { player: "Leona", character: "Neville Longbottom", curses: 0 },
-                                    { player: "Annali", character: "Ron Weasley", curses: 0 },
-                                ]
                             });
                             nav(-2);
                         }
                     }
                     >
-                        {x} Won
+                        {x.player} Won
                     </button>
                     )
                 )
