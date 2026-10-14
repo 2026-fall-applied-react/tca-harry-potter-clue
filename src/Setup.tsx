@@ -34,6 +34,10 @@ export const Setup: React.FC<SetupProps> = ({
 
 }) => {
 
+    //
+    // React hooks
+    //
+
     const [availablePlayers, setAvailablePlayers] = useState<AvailablePlayer[]>(
         previousPlayers.map(name => ({
             name,
@@ -41,6 +45,8 @@ export const Setup: React.FC<SetupProps> = ({
             character: "",
         }))
     );
+
+    const [newPlayerName, setNewPlayerName] = useState("");
 
     const nav = useNavigate();
 
@@ -51,6 +57,47 @@ export const Setup: React.FC<SetupProps> = ({
     const chosenPlayerCount = availablePlayers.filter(
         x => x.checked
     ).length
+
+    const validateAndAdd = () => {
+        // check for dupe names
+        const dupe = availablePlayers.find(
+            x => x.name === newPlayerName
+        );
+
+        // if dupe, don't add, rather just check
+        // if (dupe) ...
+
+        // if not a dupe, add it already checked
+        // since likely in front of user ready to play
+        // else (...)
+
+        setAvailablePlayers(
+            prev => [
+                // handle dupes by just checking them
+                ...prev.map(
+                    x => x === dupe
+                        ? {
+                            ...x,
+                            checked: true
+                        }
+                        : x
+                ),
+
+                // now add non dupes
+                ...(dupe
+                    ? []
+                    : [
+                        {
+                            name: newPlayerName,
+                            checked: true,
+                            character: "" as const,
+                        }
+                    ]
+                ),
+            ]
+        );
+        setNewPlayerName("");
+    };
 
     //
     // return the jsx
@@ -92,9 +139,27 @@ export const Setup: React.FC<SetupProps> = ({
             >
                 <input 
                     className="input join-item w-full" 
-                    placeholder="New Player Name" 
+                    placeholder="New Player Name"
+                    value={
+                        newPlayerName
+                    } 
+                    onChange={
+                        (e) => setNewPlayerName(
+                            e.target.value
+                        )
+                    }
                 />
-                <button className="btn join-item">Add Player</button>
+                <button 
+                    className="btn join-item"
+                    disabled={
+                        newPlayerName.length === 0
+                    }
+                    onClick={
+                        validateAndAdd
+                    }
+                    >
+                        Add Player
+                </button>
             </div>
             {
                 availablePlayers.map(
