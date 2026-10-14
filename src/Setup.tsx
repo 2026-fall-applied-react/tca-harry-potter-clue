@@ -59,7 +59,9 @@ export const Setup: React.FC<SetupProps> = ({
     useEffect(() => setTitle(APP_TITLE), [setTitle]);
 
     return (
-        <div>
+        <div
+            className="flex flex-col"
+        >
             <button
                 className="btn btn-soft btn-lg mt-3 w-full lg:w-64"
                 disabled={
@@ -85,6 +87,15 @@ export const Setup: React.FC<SetupProps> = ({
                     : `Play With ${chosenPlayerCount} Player(s)`
                 }
             </button>
+            <div 
+                className="join mt-3 lg:w-64"
+            >
+                <input 
+                    className="input join-item w-full" 
+                    placeholder="New Player Name" 
+                />
+                <button className="btn join-item">Add Player</button>
+            </div>
             {
                 availablePlayers.map(
                     x => (
