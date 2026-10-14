@@ -45,7 +45,15 @@ export const Setup: React.FC<SetupProps> = ({
     const nav = useNavigate();
 
     //
-    // react hooks
+    // derived or calculated state and helpers
+    //
+
+    const chosenPlayerCount = availablePlayers.filter(
+        x => x.checked
+    ).length
+
+    //
+    // return the jsx
     //
 
     useEffect(() => setTitle(APP_TITLE), [setTitle]);
@@ -54,6 +62,9 @@ export const Setup: React.FC<SetupProps> = ({
         <div>
             <button
                 className="btn btn-soft btn-lg mt-3 w-full lg:w-64"
+                disabled={
+                    chosenPlayerCount < 3
+                }
                 onClick={
                     () => {
                         setCurrentPlayers(
@@ -68,7 +79,11 @@ export const Setup: React.FC<SetupProps> = ({
                         );
                         nav('/play')}}
             >
-                Play The Game
+                {
+                    chosenPlayerCount < 3
+                    ? "Choose at least 3 players"
+                    : `Play With ${chosenPlayerCount} Player(s)`
+                }
             </button>
             {
                 availablePlayers.map(
