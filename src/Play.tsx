@@ -39,13 +39,15 @@ export const Play: React.FC<PlayProps> = ({
     const nav = useNavigate();
 
     return (
-        <div>
+        <div
+        className="flex flex-col"
+        >
             {
                 currentPlayers.map(
                     x => (
                     <button 
                     key={x.player}
-                    className="btn btn-soft btn-lg mt-3 w-full lg:w-64 m-3"
+                    className="btn btn-soft btn-lg mt-3 w-full lg:w-64"
                                 onClick={
                         () => {
                             addNewGameResult({
