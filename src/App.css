@@ -1,2 +1,94 @@
 @import "tailwindcss";
-@plugin "daisyui";
+@plugin "daisyui" {
+  themes: false;
+}
+
+/* Light: parchment, Gryffindor scarlet and gold */
+@plugin "daisyui/theme" {
+  name: "hogwarts-light";
+  default: true;
+  prefersdark: false;
+  color-scheme: light;
+  --color-base-100: #f7efd9;
+  --color-base-200: #eadfc0;
+  --color-base-300: #d6c79c;
+  --color-base-content: #2e1f12;
+  --color-primary: #740001;
+  --color-primary-content: #f0c75e;
+  --color-secondary: #1a472a;
+  --color-secondary-content: #f7efd9;
+  --color-accent: #d3a625;
+  --color-accent-content: #2e1f12;
+  --color-neutral: #2e1f12;
+  --color-neutral-content: #f7efd9;
+  --color-info: #0e1a40;
+  --color-info-content: #f7efd9;
+  --color-success: #1a472a;
+  --color-success-content: #f7efd9;
+  --color-warning: #d3a625;
+  --color-warning-content: #2e1f12;
+  --color-error: #ae0001;
+  --color-error-content: #f7efd9;
+  --radius-box: 0.5rem;
+  --radius-field: 0.375rem;
+  --radius-selector: 0.375rem;
+}
+
+/* Dark: midnight Hogwarts, Ravenclaw blue and candlelight gold */
+@plugin "daisyui/theme" {
+  name: "hogwarts-dark";
+  default: false;
+  prefersdark: true;
+  color-scheme: dark;
+  --color-base-100: #14111f;
+  --color-base-200: #0d0b16;
+  --color-base-300: #070610;
+  --color-base-content: #eadfc0;
+  --color-primary: #d3a625;
+  --color-primary-content: #1a0f05;
+  --color-secondary: #2a623d;
+  --color-secondary-content: #eadfc0;
+  --color-accent: #946b2d;
+  --color-accent-content: #14111f;
+  --color-neutral: #222f5b;
+  --color-neutral-content: #eadfc0;
+  --color-info: #5b7bd5;
+  --color-info-content: #0d0b16;
+  --color-success: #2a623d;
+  --color-success-content: #eadfc0;
+  --color-warning: #f0c75e;
+  --color-warning-content: #1a0f05;
+  --color-error: #c0392b;
+  --color-error-content: #eadfc0;
+  --radius-box: 0.5rem;
+  --radius-field: 0.375rem;
+  --radius-selector: 0.375rem;
+}
+
+body {
+  font-family: "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+}
+
+.navbar p {
+  letter-spacing: 0.08em;
+  color: var(--color-primary);
+}
+
+/* Wizardly buttons: gilded border, serif small caps, magical glow on hover */
+.btn {
+  font-variant: small-caps;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  border: 2px solid var(--color-accent);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.btn:not(:disabled):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 12px color-mix(in oklab, var(--color-accent) 70%, transparent);
+}
+
+.btn-soft {
+  background: linear-gradient(135deg, var(--color-primary), color-mix(in oklab, var(--color-primary) 70%, black));
+  color: var(--color-primary-content);
+}
