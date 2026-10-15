@@ -3,7 +3,7 @@ import { HashRouter, Routes, Route } from "react-router";
 import { APP_TITLE, Home } from "./Home.tsx";
 import { Setup } from "./Setup.tsx";
 import { Play } from "./Play.tsx";
-import { getGeneralFacts, getLeaderboard, getPreviousPlayers, type GamePlayerSelection, type GameResult } from "./GameResults.ts";
+import { getDurationsByPlayerCount, getGeneralFacts, getLeaderboard, getPreviousPlayers, type GamePlayerSelection, type GameResult } from "./GameResults.ts";
 import { useState } from "react";
 
 const dummyGameResults: GameResult[] = [
@@ -109,6 +109,9 @@ const App = () => {
                 }
                 generalFacts={
                   getGeneralFacts(gameResults)
+                }
+                durationsByPlayerCount={
+                  getDurationsByPlayerCount(gameResults)
                 }
                 
               />

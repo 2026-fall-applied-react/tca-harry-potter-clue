@@ -75,6 +75,51 @@ export const getGeneralFacts = (
         );
 };
 
+// Average game duration for each player count
+export type DurationByPlayerCountEntry = {
+    players: number;
+    games: number;
+    avg: string;
+};
+
+export const getDurationsByPlayerCount = (
+    games: GameResult[],
+): DurationByPlayerCountEntry[] => games
+    // unique player counts
+    .map(
+        x => x.players.length
+    )
+    .filter(
+        (x, i, a) => a.indexOf(x) === i
+    )
+    // in player count order
+    .sort(
+        (a, b) => a - b
+    )
+    .map(
+        count => {
+            const durationsInMS = games
+                .filter(
+                    x => x.players.length === count
+                )
+                .map(
+                    x => Date.parse(x.end) - Date.parse(x.start)
+                );
+
+            return {
+                players: count,
+                games: durationsInMS.length,
+                avg: formatGameDuration(
+                    durationsInMS.reduce(
+                        (a, b) => a + b,
+                        0
+                    ) / durationsInMS.length
+                ),
+            };
+        }
+    )
+;
+
 // Allowable Harry Potter Characters
 export type Character =
     | "Harry Potter"

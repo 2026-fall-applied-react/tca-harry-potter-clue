@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import type { GeneralFacts, LeaderboardEntry } from "./GameResults";
+import type { DurationByPlayerCountEntry, GeneralFacts, LeaderboardEntry } from "./GameResults";
 import { useEffect } from "react";
 
 export const APP_TITLE = "Harry Potter Clue Companion"
@@ -8,12 +8,14 @@ type HomeProps = {
   leaderboard: LeaderboardEntry[];
   setTitle: (t: string) => void;
   generalFacts: GeneralFacts;
+  durationsByPlayerCount: DurationByPlayerCountEntry[];
 };
 
 export const Home: React.FC<HomeProps> = ({ 
   leaderboard: lb, 
   setTitle,
   generalFacts,
+  durationsByPlayerCount,
  }) => {
   const nav = useNavigate();
 
@@ -101,6 +103,49 @@ export const Home: React.FC<HomeProps> = ({
                                     <td>{x.losses}</td>
                                     <td>{x.avg.toFixed(3)}</td>
                                     <td>{x.player}</td>
+                                    </tr>
+                                )
+                            )
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+              )
+          }
+        </div>
+      </div>
+      <div className="card w-full bg-base-100 card-md shadow-lg my-5">
+        <div className="card-body p-0">
+          <h2 className="card-title ml-3 mt-3">
+            Game Duration by Player Count
+          </h2>
+          {
+            durationsByPlayerCount.length === 0
+              ? (
+                  <p className="ml-3 mb-5">
+                    Play a game to see average durations...
+                  </p>
+              )
+              : (
+                  <div className="overflow-x-auto">
+                    <table className="table table-zebra">
+                      <thead>
+                        <tr>
+                          <th>Players</th>
+                          <th>Games</th>
+                          <th>Avg</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {
+                            durationsByPlayerCount.map(
+                                x => (
+                                    <tr
+                                        key={x.players}
+                                    >
+                                    <td>{x.players}</td>
+                                    <td>{x.games}</td>
+                                    <td>{x.avg}</td>
                                     </tr>
                                 )
                             )
