@@ -5,6 +5,11 @@ import type { Character, GamePlayerSelection } from "./GameResults";
 
 export const APP_TITLE = "Setup Game"
 
+// Game has a minimum of 3 and maximum of 6 players
+const MIN_PLAYERS = 3;
+const MAX_PLAYERS = 6;
+
+// Only allowable characters to play
 const characters: Character[] = [
     "Harry Potter",
     "Ron Weasley",
@@ -54,9 +59,17 @@ export const Setup: React.FC<SetupProps> = ({
     // derived or calculated state and helpers
     //
 
-    const chosenPlayerCount = availablePlayers.filter(
-        x => x.checked
-    ).length
+    // Which players are checked/selected yet? How many?
+    const selectedPlayers = availablePlayers.filter(player => player.checked);
+    const chosenPlayerCount = selectedPlayers.length
+
+    // Do all selected players have a character?
+    const selectedPlayersHaveCharacters = selectedPlayers.every(
+        player => player.character !== ""
+    );
+
+    // Is the number of players at the limit, based on game rules?
+    const isAtPlayerLimit = chosenPlayerCount >= MAX_PLAYERS;
 
     const validateAndAdd = () => {
         // check for dupe names
@@ -78,7 +91,7 @@ export const Setup: React.FC<SetupProps> = ({
                     x => x === dupe
                         ? {
                             ...x,
-                            checked: true
+                            checked: x.checked || !isAtPlayerLimit
                         }
                         : x
                 ),
@@ -89,7 +102,7 @@ export const Setup: React.FC<SetupProps> = ({
                     : [
                         {
                             name: newPlayerName,
-                            checked: true,
+                            checked: !isAtPlayerLimit,
                             character: "" as const,
                         }
                     ]
@@ -99,20 +112,25 @@ export const Setup: React.FC<SetupProps> = ({
         setNewPlayerName("");
     };
 
-    //
-    // return the jsx
-    //
-
     useEffect(() => setTitle(APP_TITLE), [setTitle]);
+
+/*
+RETURN JSX
+*/
 
     return (
         <div
             className="flex flex-col"
         >
+            <p>Harry Potter Clue has 3-6 players and requires that you choose a character.</p>
             <button
                 className="btn btn-soft btn-lg mt-3 w-full lg:w-64"
+                // Must have at least 3 players, max six to play
+                // All selected players must have characters
                 disabled={
-                    chosenPlayerCount < 3
+                    chosenPlayerCount < MIN_PLAYERS ||
+                    chosenPlayerCount > MAX_PLAYERS ||
+                    !selectedPlayersHaveCharacters
                 }
                 onClick={
                     () => {
@@ -130,7 +148,7 @@ export const Setup: React.FC<SetupProps> = ({
             >
                 {
                     chosenPlayerCount < 3
-                    ? "Choose at least 3 players"
+                    ? "Choose 3-6 Players"
                     : `Play With ${chosenPlayerCount} Player(s)`
                 }
             </button>
@@ -177,6 +195,7 @@ export const Setup: React.FC<SetupProps> = ({
                                 checked={
                                     x.checked
                                 }
+                                disabled={!x.checked && isAtPlayerLimit}
                             onChange={
                                 (e) => setAvailablePlayers(
                                     players => players.map(
@@ -184,6 +203,7 @@ export const Setup: React.FC<SetupProps> = ({
                                         ? {
                                             ...player,
                                             checked: e.target.checked,
+                                            character: e.target.checked ? player.character : "",
                                         }
                                         : player
                                     )
@@ -194,6 +214,7 @@ export const Setup: React.FC<SetupProps> = ({
                         </label>
                         <select
                             className="select ml-3"
+                            disabled={!x.checked}
                             value={x.character}
                             onChange={e => {
                                 const character = characters.find(
@@ -209,11 +230,21 @@ export const Setup: React.FC<SetupProps> = ({
                             }}
                         >
                             <option value="">Choose a character</option>
-                            {characters.map(character => (
-                                <option key={character} value={character}>
-                                    {character}
-                                </option>
-                            ))}
+                                {characters
+                                    // Keep characters that aren't selected by another checked player
+                                    .filter(character =>
+                                        !selectedPlayers.some(
+                                            player =>
+                                                player.name !== x.name &&
+                                                player.character === character
+                                        )
+                                    )
+                                    // Map remaining character values to input box
+                                    .map(character => (
+                                        <option key={character} value={character}>
+                                            {character}
+                                        </option>
+                                    ))}
                         </select>
                     </p>
                 ))
