@@ -4,7 +4,8 @@ import { APP_TITLE, Home } from "./Home.tsx";
 import { Setup } from "./Setup.tsx";
 import { Play } from "./Play.tsx";
 import { getDurationsByPlayerCount, getGeneralFacts, getLeaderboard, getPreviousPlayers, type GamePlayerSelection, type GameResult } from "./GameResults.ts";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import localforage from "localforage";
 
 const dummyGameResults: GameResult[] = [
   {
@@ -80,6 +81,31 @@ const App = () => {
 
   const [theme, setTheme] = useState(DEFAULT_THEME);
 
+  useEffect(
+    () => {
+      const loadTheme = async () => {
+        const savedTheme = await localforage.getItem<string>(
+          "theme"
+        ) ?? DEFAULT_THEME;
+
+        if(!ignore) {
+          setTheme(
+            savedTheme
+          );
+        }
+      };
+      let ignore = false;
+      loadTheme();
+
+      return (
+        () => {
+          ignore = true;
+        }
+      );
+    },
+    [],
+  );
+
   //
   // derived or calculated state and helper functions
   //
@@ -115,11 +141,19 @@ const App = () => {
             theme !== DEFAULT_THEME
           }
           onChange={
-            () => setTheme(
-              theme === DEFAULT_THEME
-                ? OTHER_THEME
-                : DEFAULT_THEME
-            )
+            async() => {
+              const savedTheme = await localforage.setItem<string>(
+                "theme",
+                  theme === DEFAULT_THEME
+                  ? OTHER_THEME
+                  : DEFAULT_THEME,
+              );
+
+              
+              setTheme(
+                savedTheme
+            );
+           }
           }
         />
 
