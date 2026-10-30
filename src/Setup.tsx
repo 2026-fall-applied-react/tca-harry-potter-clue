@@ -1,23 +1,13 @@
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
+import { HARRY_POTTER_CHARACTERS } from "./GameResults";
 import type { Character, GamePlayer } from "./GameResults";
-
 
 export const APP_TITLE = "Setup Game"
 
 // Game has a minimum of 3 and maximum of 6 players
 const MIN_PLAYERS = 3;
 const MAX_PLAYERS = 6;
-
-// Only allowable characters to play
-const characters: Character[] = [
-    "Harry Potter",
-    "Ron Weasley",
-    "Hermione Granger",
-    "Ginny Weasley",
-    "Luna Lovegood",
-    "Neville Longbottom",
-];
 
 type AvailablePlayer = {
     name: string;
@@ -30,7 +20,6 @@ type SetupProps = {
     previousPlayers: string[];
     setCurrentPlayers: (players: GamePlayer[]) => void;
 }
-
 
 export const Setup: React.FC<SetupProps> = ({
     setTitle,
@@ -55,9 +44,7 @@ export const Setup: React.FC<SetupProps> = ({
 
     const nav = useNavigate();
 
-    //
-    // derived or calculated state and helpers
-    //
+  //* DERIVED OR CALCULATED STATE *//
 
     // Which players are checked/selected yet? How many?
     const selectedPlayers = availablePlayers.filter(player => player.checked);
@@ -217,7 +204,7 @@ RETURN JSX
                             disabled={!x.checked}
                             value={x.character}
                             onChange={e => {
-                                const character = characters.find(
+                                const character = HARRY_POTTER_CHARACTERS.find(
                                     option => option === e.target.value
                                 ) ?? "";
                                 setAvailablePlayers(players =>
@@ -230,7 +217,7 @@ RETURN JSX
                             }}
                         >
                             <option value="">Choose a character</option>
-                                {characters
+                                {HARRY_POTTER_CHARACTERS
                                     // Keep characters that aren't selected by another checked player
                                     .filter(character =>
                                         !selectedPlayers.some(

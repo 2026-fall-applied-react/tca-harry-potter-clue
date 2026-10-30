@@ -3,43 +3,55 @@ import { durationFormatter } from "human-readable";
 //* TYPE DEFINITIONS AND ALIASES *//
 
 // Allowable Harry Potter Characters
-export type Character =
-  | "Harry Potter"
-  | "Ron Weasley"
-  | "Hermione Granger"
-  | "Ginny Weasley"
-  | "Luna Lovegood"
-  | "Neville Longbottom";
+export const HARRY_POTTER_CHARACTERS = [
+    "Harry Potter",
+    "Ron Weasley",
+    "Hermione Granger",
+    "Ginny Weasley",
+    "Luna Lovegood",
+    "Neville Longbottom",
+] as const;
+
+export type Character = typeof HARRY_POTTER_CHARACTERS[number];
 
 // Suspects, or the "who"
-export type Suspect =
-  | "Draco Malfoy"
-  | "Bellatrix Lestrange"
-  | "Lucius Malfoy"
-  | "Peter Pettigrew"
-  | "Dolores Umbridge"
-  | "Crabbe & Goyle";
+export const SUSPECTS = [
+    "Draco Malfoy",
+    "Bellatrix Lestrange",
+    "Lucius Malfoy",
+    "Peter Pettigrew",
+    "Dolores Umbridge",
+    "Crabbe & Goyle",
+] as const;
+
+export type Suspect = typeof SUSPECTS[number];
 
 // Where it could have happened
-export type Room =
-    | "Great Hall"
-    | "Hospital Wing"
-    | "Room of Requirement"
-    | "Potions Classroom"
-    | "Trophy Room"
-    | "Divination Classroom"
-    | "Owlery"
-    | "Library"
-    | "Defense Against the Dark Arts";
+export const ROOMS = [
+    "Great Hall",
+    "Hospital Wing",
+    "Room of Requirement",
+    "Potions Classroom",
+    "Trophy Room",
+    "Divination Classroom",
+    "Owlery",
+    "Library",
+    "Defense Against the Dark Arts",
+] as const;
+
+export type Room = typeof ROOMS[number];
 
 // What item the suspect used to commit the crime
-export type Item = 
-    | "Impedimenta"
-    | "Petrificus Totalus"
-    | "Mandrake"
-    | "Sleeping Draught"
-    | "Vanishing Cabinet"
-    | "Portkey";  
+export const ITEMS = [
+    "Impedimenta",
+    "Petrificus Totalus",
+    "Mandrake",
+    "Sleeping Draught",
+    "Vanishing Cabinet",
+    "Portkey",
+] as const;
+
+export type Item = typeof ITEMS[number];  
 
 // Together, the who, what and where form the mystery to be solved
 export type Mystery = {
@@ -124,6 +136,7 @@ export type DurationByPlayerCountEntry = {
   avg: string;
 };
 
+// Gets the duration by number of players, since more players likely = more time
 export const getDurationsByPlayerCount = (
   games: GameResult[],
 ): DurationByPlayerCountEntry[] =>
