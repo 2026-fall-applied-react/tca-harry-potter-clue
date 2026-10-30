@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import type { GamePlayerSelection, GameResult } from "./GameResults";
+import type { GamePlayer, GameResult } from "./GameResults";
 import { useEffect, useState } from "react";
 
 export const APP_TITLE = "Play"
@@ -7,7 +7,7 @@ export const APP_TITLE = "Play"
 type PlayProps = {
     addNewGameResult: (r: GameResult) => void;
     setTitle: (t: string) => void;
-    currentPlayers: GamePlayerSelection[];
+    currentPlayers: GamePlayer[];
 }
 
 export const Play: React.FC<PlayProps> = ({

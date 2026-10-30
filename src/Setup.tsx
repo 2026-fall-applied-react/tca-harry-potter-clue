@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
-import type { Character, GamePlayerSelection } from "./GameResults";
+import type { Character, GamePlayer } from "./GameResults";
 
 
 export const APP_TITLE = "Setup Game"
@@ -28,7 +28,7 @@ type AvailablePlayer = {
 type SetupProps = {
     setTitle: (t: string) => void;
     previousPlayers: string[];
-    setCurrentPlayers: (players: GamePlayerSelection[]) => void;
+    setCurrentPlayers: (players: GamePlayer[]) => void;
 }
 
 
