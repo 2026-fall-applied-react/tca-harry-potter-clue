@@ -8,6 +8,7 @@ import {
   getGeneralFacts,
   getLeaderboard,
   getPreviousPlayers,
+  getWinStreaks,
   type GamePlayer,
   type GameResult,
 } from "./GameResults.ts";
@@ -193,6 +194,7 @@ const App = () => {
                   durationsByPlayerCount={getDurationsByPlayerCount(
                     gameResults,
                   )}
+                  winStreaks={getWinStreaks(gameResults)}
                 />
               }
             />
