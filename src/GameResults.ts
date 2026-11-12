@@ -211,3 +211,81 @@ const getLeaderboardEntry = (
     player: player,
   };
 };
+
+//* WIN STREAKS *//
+
+// Streaks need at least this many consecutive wins; a single win is not a streak
+export const MIN_STREAK_LENGTH = 1;
+
+export type StreakWin = {
+  date: string;
+  character: Character | "Unknown";
+};
+
+export type StreakBreaker = {
+  winner: string;
+  date: string;
+};
+
+export type PlayerStreak = {
+  player: string;
+  current: number; // 0 when no active streak
+  longest: number; // 0 when the player never had a streak
+  currentWins: StreakWin[];
+  longestWins: StreakWin[];
+  longestBrokenBy?: StreakBreaker; // undefined while the longest streak is still active
+};
+
+// Streaks are counted across the games a player took part in (chronological by end time);
+// games they sat out neither extend nor break a streak
+export const getWinStreaks = (games: GameResult[]): PlayerStreak[] => {
+  const chronological = [...games].sort(
+    (a, b) => Date.parse(a.end) - Date.parse(b.end),
+  );
+
+  return getPreviousPlayers(games)
+    .map((player) => {
+      let run: StreakWin[] = [];
+      let longestWins: StreakWin[] = [];
+      let longestBrokenBy: StreakBreaker | undefined;
+
+      chronological
+        .filter((g) => g.players.some((p) => p.player === player))
+        .forEach((g) => {
+          if (g.winner === player) {
+            run = [
+              ...run,
+              {
+                date: g.end,
+                character:
+                  g.players.find((p) => p.player === player)?.character ??
+                  "Unknown",
+              },
+            ];
+            // ">" keeps the earliest streak on ties
+            if (run.length > longestWins.length) {
+              longestWins = run;
+              longestBrokenBy = undefined;
+            }
+          } else {
+            if (run.length > 0 && run === longestWins) {
+              longestBrokenBy = { winner: g.winner, date: g.end };
+            }
+            run = [];
+          }
+        });
+
+      const hasCurrent = run.length >= MIN_STREAK_LENGTH;
+      const hasLongest = longestWins.length >= MIN_STREAK_LENGTH;
+
+      return {
+        player,
+        current: hasCurrent ? run.length : 0,
+        longest: hasLongest ? longestWins.length : 0,
+        currentWins: hasCurrent ? run : [],
+        longestWins: hasLongest ? longestWins : [],
+        longestBrokenBy: hasLongest ? longestBrokenBy : undefined,
+      };
+    })
+    .sort((a, b) => b.current - a.current || b.longest - a.longest || a.player.localeCompare(b.player));
+};
