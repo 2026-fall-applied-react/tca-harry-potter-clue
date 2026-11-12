@@ -95,9 +95,19 @@ export type GeneralFacts = {
 //* DURATION FORMATTERS *//
 const formatGameDuration = durationFormatter<string>();
 
-const formatLastPlayed = durationFormatter<string>({
-  allowMultiples: ["y", "mo", "d"],
-});
+// Formats when the last game was played
+const formatLastPlayed = (duration: number) =>
+  durationFormatter<string>({
+    allowMultiples: ["y", "mo", "d"],
+  })(duration)
+    // Convert days into singular/plural format
+    .replace(/(\d+)d/g, (_, days) =>
+      `${days} ${days === "1" ? "day" : "days"}`
+    )
+    // Convert months into singular/plural format
+    .replace(/(\d+)mo/g, (_, months) =>
+      `${months} ${months === "1" ? "month" : "months"}`
+    );
 
 export const getGeneralFacts = (games: GameResult[]): GeneralFacts => {
   // bail early if no game results
@@ -122,7 +132,7 @@ export const getGeneralFacts = (games: GameResult[]): GeneralFacts => {
   );
 
   return {
-    lastPlayed: `${formatLastPlayed(mostRecentGameInMs)} days ago`,
+    lastPlayed: `${formatLastPlayed(mostRecentGameInMs)} ago`,
     totalGames: games.length,
     shortestGame: formatGameDuration(Math.min(...gameDurationsInMS)),
     longestGame: formatGameDuration(Math.max(...gameDurationsInMS)),
