@@ -45,7 +45,11 @@ export const Setup: React.FC<SetupProps> = ({
 
   const [newPlayerName, setNewPlayerName] = useState("");
 
+  const [characterIndex, setCharacterIndex] = useState(0);
+
   const nav = useNavigate();
+
+  useEffect(() => setTitle(APP_TITLE), [setTitle]);
 
   //* DERIVED OR CALCULATED STATE *//
 
@@ -60,6 +64,38 @@ export const Setup: React.FC<SetupProps> = ({
 
   // Is the number of players at the limit, based on game rules?
   const isAtPlayerLimit = chosenPlayerCount >= MAX_PLAYERS;
+
+  // What are the available characters at the point of selection?
+  const availableCharacters = HARRY_POTTER_CHARACTERS.filter(
+    (character) =>
+      !selectedPlayers.some(
+        (player) =>
+          player.name !== characterPickerPlayer &&
+          player.character === character,
+      ),
+  );
+
+  // Opens the Character Picker Modal
+  const openCharacterPicker = (playerName: string) => {
+    const player = availablePlayers.find(
+      (availablePlayer) => availablePlayer.name === playerName,
+    );
+    const choices = HARRY_POTTER_CHARACTERS.filter(
+      (character) =>
+        !selectedPlayers.some(
+          (selectedPlayer) =>
+            selectedPlayer.name !== playerName &&
+            selectedPlayer.character === character,
+        ),
+    );
+    const currentCharacterIndex = player?.character
+      ? choices.indexOf(player.character)
+      : 0;
+
+    setCharacterPickerPlayer(playerName);
+    setCharacterIndex(currentCharacterIndex >= 0 ? currentCharacterIndex : 0);
+    dialogRef.current?.showModal();
+  };
 
   const validateAndAddPlayer = () => {
     // check for dupe names
@@ -104,13 +140,6 @@ export const Setup: React.FC<SetupProps> = ({
     }
 
     setNewPlayerName("");
-  };
-
-  useEffect(() => setTitle(APP_TITLE), [setTitle]);
-
-  const openCharacterPicker = (playerName: string) => {
-    setCharacterPickerPlayer(playerName);
-    dialogRef.current?.showModal();
   };
 
   /* RETURN JSX */
@@ -177,6 +206,7 @@ export const Setup: React.FC<SetupProps> = ({
         </button>
       </div>
 
+      {/* Map new player and their checkbox - checked - to the list of players without character selected */}
       {availablePlayers.map((x) => (
         <p key={x.name} className="my-3">
           <label className="text-lg my-5">
@@ -200,6 +230,9 @@ export const Setup: React.FC<SetupProps> = ({
                   ),
                 );
 
+                {
+                  /* Open character picker modal */
+                }
                 if (checked) {
                   openCharacterPicker(x.name);
                 }
@@ -208,42 +241,19 @@ export const Setup: React.FC<SetupProps> = ({
             {x.name}
           </label>
 
-          <select
-            className="select ml-3"
-            disabled={!x.checked}
-            value={x.character}
-            onChange={(e) => {
-              const character =
-                HARRY_POTTER_CHARACTERS.find(
-                  (option) => option === e.target.value,
-                ) ?? "";
-              setAvailablePlayers((players) =>
-                players.map((player) =>
-                  player.name === x.name ? { ...player, character } : player,
-                ),
-              );
-            }}
-          >
-            <option value="">Choose a character</option>
-            {HARRY_POTTER_CHARACTERS
-              // Keep characters that aren't selected by another checked player
-              .filter(
-                (character) =>
-                  !selectedPlayers.some(
-                    (player) =>
-                      player.name !== x.name && player.character === character,
-                  ),
-              )
-              // Map remaining character values to input box
-              .map((character) => (
-                <option key={character} value={character}>
-                  {character}
-                </option>
-              ))}
-          </select>
+          {x.checked && (
+            <button
+              type="button"
+              className="btn btn-sm ml-3"
+              onClick={() => openCharacterPicker(x.name)}
+            >
+              {x.character || "Choose character"}
+            </button>
+          )}
         </p>
       ))}
 
+      {/* Dialog box/modal for selecting characters */}
       <dialog
         ref={dialogRef}
         className="modal"
@@ -262,18 +272,101 @@ export const Setup: React.FC<SetupProps> = ({
         }}
       >
         <div className="modal-box">
-          <h2 className="text-xl font-bold">
+          <h2 className="text-xl font-bold mb-4">
             Choose a character for {characterPickerPlayer}
           </h2>
+          <div className="card bg-base-200 w-full">
+            <div className="card-body items-center text-center">
+              <div className="flex h-48 w-48 items-center justify-center rounded-lg bg-base-300">
+                <span className="text-5xl font-bold">
+                  {availableCharacters[characterIndex]?.charAt(0)}
+                </span>
+              </div>
+
+              <h3 className="card-title mt-3">
+                {availableCharacters[characterIndex]}
+              </h3>
+
+              <div
+                className={
+                  availableCharacters.length > 1
+                    ? "mt-3 grid w-full grid-cols-3 gap-3"
+                    : "mt-3 flex w-full justify-center"
+                }
+              >
+                {availableCharacters.length > 1 && (
+                  <button
+                    type="button"
+                    className="btn w-full"
+                    onClick={() =>
+                      setCharacterIndex(
+                        (index) =>
+                          (index - 1 + availableCharacters.length) %
+                          availableCharacters.length,
+                      )
+                    }
+                  >
+                    Previous
+                  </button>
+                )}
+
+                {/* Select Character Button */}
+                <button
+                  type="button"
+                  className="btn btn-primary w-full"
+                  disabled={!availableCharacters[characterIndex]}
+                  onClick={() => {
+                    const character = availableCharacters[characterIndex];
+                    if (!character || characterPickerPlayer === null) {
+                      return;
+                    }
+
+                    setAvailablePlayers((players) =>
+                      players.map((player) =>
+                        player.name === characterPickerPlayer
+                          ? { ...player, character }
+                          : player,
+                      ),
+                    );
+
+                    dialogRef.current?.close();
+                  }}
+                >
+                  Choose
+                </button>
+
+                {/* Next Button */}
+                {availableCharacters.length > 1 && (
+                  <button
+                    type="button"
+                    className="btn w-full"
+                    onClick={() =>
+                      setCharacterIndex(
+                        (index) => (index + 1) % availableCharacters.length,
+                      )
+                    }
+                  >
+                    Next
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Buttons to close out of the modal, one visible, one insible but
+          allows you to just click out of modal */}
           <div className="modal-action">
             <form method="dialog">
-              <button className="btn">Close</button>
+              <button type="submit" className="btn">
+                Close
+              </button>
             </form>
           </div>
         </div>
-
         <form method="dialog" className="modal-backdrop">
-          <button>Close</button>
+          <button type="submit" aria-label="Close character picker">
+            Close
+          </button>
         </form>
       </dialog>
     </div>
