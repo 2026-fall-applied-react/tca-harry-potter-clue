@@ -36,7 +36,7 @@
 
 /* Dark: midnight Hogwarts, Ravenclaw blue and candlelight gold */
 @plugin "daisyui/theme" {
-  name: "hogwarts-dark";
+  name: "slitherin-dark";
   default: false;
   prefersdark: true;
   color-scheme: dark;
@@ -77,6 +77,7 @@ body {
 /* Wizardly buttons: gilded border, serif small caps, magical glow on hover */
 .btn {
   font-variant: small-caps;
+  padding: 1px;
   letter-spacing: 0.06em;
   font-weight: 700;
   border: 2px solid var(--color-accent);
