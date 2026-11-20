@@ -93,3 +93,7 @@ body {
   background: linear-gradient(135deg, var(--color-primary), color-mix(in oklab, var(--color-primary) 70%, black));
   color: var(--color-primary-content);
 }
+   themes: 
+    light --default, 
+    dark --prefersdark;
+ }

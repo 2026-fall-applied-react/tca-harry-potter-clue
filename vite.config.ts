@@ -8,4 +8,8 @@ export default defineConfig({
     react(),
     tailwindcss()
   ],
+  base: "/tca-harry-potter-clue/",
+  build: {
+    outDir: "docs",
+  }
 })
