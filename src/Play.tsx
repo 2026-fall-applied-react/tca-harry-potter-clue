@@ -46,7 +46,7 @@ export const Play: React.FC<PlayProps> = ({
       <fieldset className="fieldset text-2xl">
         <legend className="fieldset-legend">The Mystery Revealed!</legend>
 
-        <label className="label">Who?</label>
+        <label className="label">Who Did It?</label>
         <select
           className="select w-full lg:w-64"
           value={who}
@@ -62,7 +62,7 @@ export const Play: React.FC<PlayProps> = ({
           ))}
         </select>
 
-        <label className="label">What?</label>
+        <label className="label">What did they do it with?</label>
         <select
           className="select w-full lg:w-64"
           value={what}
@@ -78,7 +78,7 @@ export const Play: React.FC<PlayProps> = ({
           ))}
         </select>
 
-        <label className="label">Where?</label>
+        <label className="label">Where did they do it?</label>
         <select
           className="select w-full lg:w-64"
           value={where}
@@ -95,7 +95,7 @@ export const Play: React.FC<PlayProps> = ({
         </select>
       </fieldset>
       <fieldset className="fieldset text-2xl">
-      <legend className="fieldset-legend">Who Solved It?</legend>
+      <legend className="fieldset-legend">Who Solved The Mystery?</legend>
       {currentPlayers.map((x) => (
         <button
           key={x.player}

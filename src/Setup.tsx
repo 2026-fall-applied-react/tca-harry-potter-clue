@@ -313,7 +313,7 @@ export const Setup: React.FC<SetupProps> = ({
                 {/* Select Character Button */}
                 <button
                   type="button"
-                  className="btn btn-primary w-full"
+                  className="btn btn-primary btn-lg w-full px-6"
                   disabled={!availableCharacters[characterIndex]}
                   onClick={() => {
                     const character = availableCharacters[characterIndex];

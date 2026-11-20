@@ -228,7 +228,7 @@ export const Home: React.FC<HomeProps> = ({
                                   {
                                     x.longest > 0 && (
                                       <button
-                                        className="btn btn-xs btn-soft"
+                                        className="btn btn-sm btn-soft px-4"
                                         onClick={() => showDetails(x.player)}
                                       >
                                         Details
